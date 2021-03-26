@@ -3,7 +3,6 @@ import cv2
 from image_capturing.image_capturing import get_blackboard_or_none
 
 ##test comment blabla
-#tst
 
 cap = cv2.VideoCapture(0)
 
