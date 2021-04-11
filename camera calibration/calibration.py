@@ -1,9 +1,13 @@
 # Import required modules
+
+#todp: Import Problem lösen und in Doku definieren für welche Version Python und Numpy der Code geschrieben wurde 
 import cv2
 import numpy as np
 import os
 import glob
 
+#todo: Quelle -> Citavi 
+#todo: gucken ob kürzen möglich für unseren Use-Case 
 
 # Define the dimensions of checkerboard
 CHECKERBOARD = (6, 9)
@@ -87,7 +91,7 @@ ret, matrix, distortion, r_vecs, t_vecs = cv2.calibrateCamera(
 	threedpoints, twodpoints, grayColor.shape[::-1], None, None)
 
 
-# Displayig required output
+# Displaying required output
 print(" Camera matrix:")
 print(matrix)
 
