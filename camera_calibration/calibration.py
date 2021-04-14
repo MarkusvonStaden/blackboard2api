@@ -1,6 +1,6 @@
 # Import required modules
 
-#todp: Import Problem lösen und in Doku definieren für welche Version Python und Numpy der Code geschrieben wurde 
+#todo: Doku definieren für welche Version Python und Numpy der Code geschrieben wurde 
 import cv2
 import numpy as np
 import os
@@ -87,6 +87,8 @@ h, w = image.shape[:2]
 # passing the value of above found out 3D points (threedpoints)
 # and its corresponding pixel coordinates of the
 # detected corners (twodpoints)
+#todo: herausfinden, was welcher Koeff. bedeutet und welche wir als Attribute der Camera-Klasse brauchen
+#ret = return value 
 ret, matrix, distortion, r_vecs, t_vecs = cv2.calibrateCamera(
 	threedpoints, twodpoints, grayColor.shape[::-1], None, None)
 
