@@ -5,7 +5,7 @@ from image_capturing.image_capturing import get_blackboard_or_none
 ##test comment blabla
 #test 2
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("testfiles/vid1.mp4")
 
 while(True):
     # Capture frame-by-frame
