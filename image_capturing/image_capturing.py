@@ -39,7 +39,7 @@ def _create_mask(img):
     return cv2.dilate(mask_erode, kernel, iterations=1)
 
 
-def get_blackboard_or_none(img):
+def get_blackboard(img):
     # scale down image for faster processing
     img = _resize(img, 0.5)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -89,6 +89,6 @@ if __name__ == "__main__":
     while True:
         ret, frame = cap.read()
         if ret:
-            cv2.imshow("frame", get_blackboard_or_none(frame))
+            cv2.imshow("frame", get_blackboard(frame))
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
