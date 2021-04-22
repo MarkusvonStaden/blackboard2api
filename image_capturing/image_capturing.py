@@ -31,6 +31,23 @@ def draw_biggest_contour(mask, img):
 
 
 def _create_mask(img):
+    if __name__ == "__main__":
+        h_min = cv2.getTrackbarPos("h_min", "result")
+        s_min = cv2.getTrackbarPos("s_min", "result")
+        v_min = cv2.getTrackbarPos("v_min", "result")
+
+        h_max = cv2.getTrackbarPos("h_max", "result")
+        s_max = cv2.getTrackbarPos("s_max", "result")
+        v_max = cv2.getTrackbarPos("v_max", "result")
+        
+    else: 
+        h_min = 50
+        s_min = 40
+        v_min = 0
+        h_max = 100
+        s_max = 200
+        v_max = 255
+        
     green_MIN = np.array([h_min, s_min, v_min], np.uint8)
     green_MAX = np.array([h_max, s_max, v_max], np.uint8)
     mask = cv2.inRange(img, green_MIN, green_MAX)
@@ -44,15 +61,6 @@ def get_blackboard(img):
     img = _resize(img, 0.5)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hsv_blurred = _blur(hsv)
-
-    if __name__ == "__main__":
-        h_min = cv2.getTrackbarPos("h_min", "result")
-        s_min = cv2.getTrackbarPos("s_min", "result")
-        v_min = cv2.getTrackbarPos("v_min", "result")
-
-        h_max = cv2.getTrackbarPos("h_max", "result")
-        s_max = cv2.getTrackbarPos("s_max", "result")
-        v_max = cv2.getTrackbarPos("v_max", "result")
 
     mask = _create_mask(hsv_blurred)
     img_with_contour = draw_biggest_contour(mask, img)
