@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-
 def nothing(x):
     pass
 
@@ -47,7 +46,7 @@ def _create_mask(img):
         h_max = 100
         s_max = 200
         v_max = 255
-        
+
     green_MIN = np.array([h_min, s_min, v_min], np.uint8)
     green_MAX = np.array([h_max, s_max, v_max], np.uint8)
     mask = cv2.inRange(img, green_MIN, green_MAX)
@@ -96,7 +95,15 @@ if __name__ == "__main__":
 
     while True:
         ret, frame = cap.read()
+        h,w = frame.shape[:2]
+
+        mtx = np.load("mtx.npy")
+        dist = np.load("dist.npy")
+
+        newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
         if ret:
+            frame = dst = cv2.undistort(frame, mtx, dist, None, newcameramtx)
             cv2.imshow("frame", get_blackboard(frame))
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
+        
