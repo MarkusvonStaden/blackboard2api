@@ -1,7 +1,13 @@
 import numpy as np
 import cv2
 from image_capturing.image_capturing import get_blackboard_or_none
+import camera_calibration.calibration
+#import camera_calibration.camera
 
+camera_changed = True #for developping purpose; will later be set by GUI
+
+if camera_changed == True: 
+    calibrateCamera()
 
 cap = cv2.VideoCapture(0)
 
