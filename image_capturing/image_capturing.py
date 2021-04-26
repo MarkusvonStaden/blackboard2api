@@ -97,12 +97,12 @@ if __name__ == "__main__":
         ret, frame = cap.read()
         h,w = frame.shape[:2]
 
-        mtx = np.load("mtx.npy")
-        dist = np.load("dist.npy")
+        mtx = np.load("lens_correction/78deg/mtx.npy")
+        dist = np.load("lens_correction/78deg/dist.npy")
 
         newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
         if ret:
-            frame = dst = cv2.undistort(frame, mtx, dist, None, newcameramtx)
+            frame = cv2.undistort(frame, mtx, dist, None, newcameramtx)
             cv2.imshow("frame", get_blackboard(frame))
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break

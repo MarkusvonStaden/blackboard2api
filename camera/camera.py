@@ -19,7 +19,7 @@ def calibrate_camera():
     prev_img_shape = None
 
     # Extracting path of individual image stored in a given directory
-    images = glob.glob('./testfiles/calibration/*.jpg')
+    images = glob.glob('./testfiles/calibration/65deg/*.png')
     for fname in images:
         img = cv2.imread(fname)
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -47,8 +47,6 @@ def calibrate_camera():
 
     cv2.destroyAllWindows()
 
-    h,w = img.shape[:2]
-
     """
     Performing camera calibration by 
     passing the value of known 3D points (objpoints)
@@ -64,16 +62,6 @@ def calibrate_camera():
 
     np.save("mtx", mtx)
     np.save("dist", dist)
-
-    img = cv2.imread("./testfiles/calibration/WIN_20210408_10_49_35_Pro.jpg")
-    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
-    dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
-    h, w = dst.shape[:2]
-    h = int(0.4 * h)
-    w = int(0.4 * w)
-    dst = cv2.resize(dst, (w, h))
-    cv2.imshow('img',dst)
-    cv2.waitKey(0)
 
 
 if __name__ == '__main__':
