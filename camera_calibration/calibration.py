@@ -5,7 +5,8 @@ import cv2
 import numpy as np
 import os
 import glob
-import camera #funktioniert irgendwie nicht???
+import camera_calibration.camera as ca 
+#from .camera_calibration import camera #funktioniert irgendwie nicht???
 
 #todo: Quelle -> Citavi 
 #todo: gucken ob kürzen möglich für unseren Use-Case 
@@ -94,7 +95,7 @@ def calibrateCamera():
 		threedpoints, twodpoints, grayColor.shape[::-1], None, None)
 
 	# Save attributes in an object
-	CurrentCamera = Camera()
+	CurrentCamera = ca.Camera()
 	CurrentCamera.matrix = matrix
 	CurrentCamera.dist = distortion
 
