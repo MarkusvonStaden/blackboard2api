@@ -96,8 +96,8 @@ def calibrateCamera():
 
 	# Save attributes in an object
 	CurrentCamera = ca.Camera()
-	CurrentCamera.matrix = matrix
-	CurrentCamera.dist = distortion
+	CurrentCamera.set_matrix(matrix)
+	CurrentCamera.set_dist(distortion)
 
 	# Displaying required output
 	print(" Camera matrix:")
@@ -114,8 +114,8 @@ def calibrateCamera():
 
 	#for developping purpose
 	print("\n Camera matrix in CurrentCamera")
-	print(CurrentCamera.matrix)
+	print(CurrentCamera.get_matrix)
 
 	print("\n Distortion coefficients in CurrentCamera")
-	print(CurrentCamera.dist)
+	print(CurrentCamera.get_dist)
 
