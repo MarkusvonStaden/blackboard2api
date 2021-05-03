@@ -114,8 +114,8 @@ def calibrateCamera():
 
 	#for developping purpose
 	print("\n Camera matrix in CurrentCamera")
-	print(CurrentCamera.get_matrix)
+	print(CurrentCamera.get_matrix())
 
 	print("\n Distortion coefficients in CurrentCamera")
-	print(CurrentCamera.get_dist)
+	print(CurrentCamera.get_dist())
 
