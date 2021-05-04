@@ -26,6 +26,8 @@ def draw_biggest_contour(mask, img):
     if len(contours) != 0:
         c = max(contours, key=cv2.contourArea)
         cv2.drawContours(img, [c], -1, (0, 255, 0), 3)
+        x,y,w,h = cv2.boundingRect(c)
+        img = cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
         return img
 
 
@@ -60,7 +62,6 @@ def get_blackboard(img):
     img = _resize(img, 0.5)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hsv_blurred = _blur(hsv)
-
     mask = _create_mask(hsv_blurred)
     img_with_contour = draw_biggest_contour(mask, img)
     cv2.imshow("mask", mask)
@@ -95,14 +96,7 @@ if __name__ == "__main__":
 
     while True:
         ret, frame = cap.read()
-        h,w = frame.shape[:2]
-
-        mtx = np.load("lens_correction/78deg/mtx.npy")
-        dist = np.load("lens_correction/78deg/dist.npy")
-
-        newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
         if ret:
-            frame = cv2.undistort(frame, mtx, dist, None, newcameramtx)
             cv2.imshow("frame", get_blackboard(frame))
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
