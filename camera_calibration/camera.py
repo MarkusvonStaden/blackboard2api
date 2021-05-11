@@ -106,9 +106,9 @@ class Camera(object):
 
         # Save attributes in an object
         # todo: anpassen, da es jetzt eine Methode ist!! 
-        CurrentCamera = ca.Camera()
-        CurrentCamera.set_matrix(matrix)
-        CurrentCamera.set_dist(distortion)
+        #CurrentCamera = ca.Camera()
+        #CurrentCamera.set_matrix(matrix)
+        #CurrentCamera.set_dist(distortion)
 
         # Displaying required output
         print(" Camera matrix:")
@@ -125,10 +125,10 @@ class Camera(object):
 
         #for developping purpose
         print("\n Camera matrix in CurrentCamera")
-        print(CurrentCamera.get_matrix())
+        #print(CurrentCamera.get_matrix())
 
         print("\n Distortion coefficients in CurrentCamera")
-        print(CurrentCamera.get_dist())
+        #print(CurrentCamera.get_dist())
 
 
 #methods
