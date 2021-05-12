@@ -73,20 +73,20 @@ class Camera(object):
 
             # If desired number of corners can be detected then, 
             # refine the pixel coordinates and display them on the images of checker board
-            # if ret == True:
-            #     threedpoints.append(objectp3d)
+            if ret == True:
+                 threedpoints.append(objectp3d)
 
-            #     # Refining pixel coordinates
-            #     # for given 2d points.
-            #     corners2 = cv2.cornerSubPix(
-            #         grayColor, corners, (11, 11), (-1, -1), criteria)
+                 # Refining pixel coordinates
+                 # for given 2d points.
+                 corners2 = cv2.cornerSubPix(
+                     grayColor, corners, (11, 11), (-1, -1), criteria)
 
-            #     twodpoints.append(corners2)
+                 twodpoints.append(corners2)
 
-            #     # Draw and display the corners
-            #     image = cv2.drawChessboardCorners(image,
-            #                                     CHECKERBOARD,
-            #                                     corners2, ret)
+                 # Draw and display the corners
+                 image = cv2.drawChessboardCorners(image,
+                                                 CHECKERBOARD,
+                                                 corners2, ret)
 
             cv2.imshow('img', image)
             cv2.waitKey(0)
