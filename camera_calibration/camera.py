@@ -22,16 +22,29 @@ class Camera(object):
         # [2,2] = focal length f_y 
         # [1,3] = optical center c_x
         # [2,3] = optical center c_y
-        if np.shape(camera_matrix) == (3,3): 
-            NaN = float('nan') 
-            template_matrix = np. array ([[NaN, 0, NaN], [0, NaN, NaN], [0,0,1]])
-            masking_matrix = np.array ([[False, True, False], [True, False, False], [True, True, True]])
-            if np.array_equal(masking_matrix,(camera_matrix == template_matrix))== True: 
-                self.__matrix = camera_matrix 
+        try: 
+            if np.shape(camera_matrix) == (3,3): 
+                NaN = float('nan') 
+                template_matrix = np. array ([[NaN, 0, NaN], [0, NaN, NaN], [0,0,1]])
+                masking_matrix = np.array ([[False, True, False], [True, False, False], [True, True, True]])
+                if np.array_equal(masking_matrix,(camera_matrix == template_matrix))== True: 
+                    self.__matrix = camera_matrix 
+                else: 
+                    raise ValueError("wrong camera_matrix")
+            else: 
+                raise ValueError ("camera_matrix has wrong size")
+        except ValueError as v: 
+            print("ValueError: ", v)
+
     def set_dist(self, camera_dist):
         # The array for the distortion coefficients must be of size 5x1
-        if np.shape(camera_dist) == (5,1): 
-            self.__dist = camera_dist 
+        try: 
+            if np.shape(camera_dist) == (5,1): 
+                self.__dist = camera_dist 
+            else: 
+                raise ValueError("camera_dist has wrong size")
+        except ValueError as v: 
+            print("ValueError: ", v)
     
     matrix = property(get_matrix, set_matrix)
     dist = property(get_dist, set_dist)
