@@ -8,8 +8,13 @@ import camera_calibration.camera as ca
 camera_changed = True #for developping purpose; will later be set by GUI
 
 if camera_changed == True: 
-    NewCamera = ca.Camera()
-    NewCamera.calibrate()
+    #NewCamera = ca.Camera()
+    #NewCamera.calibrate()
+    CurrentCamera = ca.Camera.calibrate()
+    print("CurrentCamera.dist: ")
+    print(CurrentCamera.dist)
+    print("CurrentCamera.matrix: ")
+    print(CurrentCamera.matrix)
 
 cap = cv2.VideoCapture(0)
 

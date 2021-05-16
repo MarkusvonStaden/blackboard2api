@@ -8,9 +8,9 @@ import glob
 class Camera(object):
 #todo: entscheiden ob private/public/property etc. 
 
-    def __init__(self): 
-        self.__matrix = np.zeros((3,3))     #camera matrix
-        self.__dist = np.zeros((5,1))      #distortion coefficients
+    def __init__(self, matrix, distortion): 
+        self.matrix = matrix        #camera matrix
+        self.dist = distortion      #distortion coefficients
 
     def get_matrix(self):
         return self.__matrix
@@ -39,7 +39,7 @@ class Camera(object):
     def set_dist(self, camera_dist):
         # The array for the distortion coefficients must be of size 5x1
         try: 
-            if np.shape(camera_dist) == (5,1): 
+            if np.shape(camera_dist) == (1,5): 
                 self.__dist = camera_dist 
             else: 
                 raise ValueError("camera_dist has wrong size")
@@ -117,13 +117,7 @@ class Camera(object):
         ret, matrix, distortion, r_vecs, t_vecs = cv2.calibrateCamera(
             threedpoints, twodpoints, grayColor.shape[::-1], None, None)
 
-        # Save attributes in an object
-        # todo: anpassen, da es jetzt eine Methode ist!! 
-        #CurrentCamera = ca.Camera()
-        #CurrentCamera.set_matrix(matrix)
-        #CurrentCamera.set_dist(distortion)
-
-        # Displaying required output
+        # Displaying required output for developping purpose 
         print(" Camera matrix:")
         print(matrix)
 
@@ -136,12 +130,8 @@ class Camera(object):
         print("\n Translation Vectors:")
         print(t_vecs)
 
-        #for developping purpose
-        print("\n Camera matrix in CurrentCamera")
-        #print(CurrentCamera.get_matrix())
-
-        print("\n Distortion coefficients in CurrentCamera")
-        #print(CurrentCamera.get_dist())
+        NewCamera = Camera(matrix, distortion)
+        return NewCamera
 
 
 #methods
