@@ -4,9 +4,9 @@ import time
 
 def _find_biggest_contour(img, raw):
     max_area = 0
-    biggest_contour = np.array([])
+    # biggest_contour = np.array([])
     raw = raw.copy()
-    contours, hirachy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierachy = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(raw, contours, -1, (0,255,0), 5)
     for contour in contours:
         area = cv2.contourArea(contour)
