@@ -90,3 +90,6 @@ class Camera(object):
 
         NewCamera = Camera(matrix, distortion)
         return NewCamera
+
+    def create_matrix_from_file()
+    pass
