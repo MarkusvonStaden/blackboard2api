@@ -57,4 +57,6 @@ class DistortionCamera:
         pass
 
     def undistort_image(self, image):
-        return cv2.undistort(image, self.matrix, self.dist, None, self.cameramatrix)
+        dst = cv2.undistort(image, self.matrix, self.dist, None, self.cameramatrix)
+        x, y, w, h = self.roi
+        return dst[y:y+h, x:x+w]
