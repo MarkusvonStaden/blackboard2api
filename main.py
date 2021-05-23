@@ -1,4 +1,3 @@
-import numpy as np
 import cv2
 from image_capturing.image_capturing import get_blackboard_or_none
 from camera_calibration.camera import DistortionCamera 
