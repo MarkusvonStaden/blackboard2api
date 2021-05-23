@@ -1,8 +1,7 @@
 import cv2
-from image_capturing.image_capturing import get_blackboard_or_none
 from camera_calibration.camera import DistortionCamera 
 
-camera_changed = True
+camera_changed = False
 
 if camera_changed: 
     CurrentCamera: DistortionCamera = DistortionCamera.create_camera_matrix_from_directory("", ".jpg", "CurrentCamera.object")
