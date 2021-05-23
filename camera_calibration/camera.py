@@ -10,6 +10,9 @@ class DistortionCamera:
     matrix: np.ndarray
     dist: np.ndarray
 
+    def __post_init__(self):
+        if np.shape(self.matrix) != (3,3): raise ValueError("wrong matrix shape")
+
     @staticmethod
     def create_camera_matrix_from_images(images: tuple):
         CHECKERBOARD = (6, 9)
