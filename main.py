@@ -1,20 +1,23 @@
-import numpy as np
 import cv2
-from image_capturing.image_capturing import get_blackboard
+from image_capturing.image_capturing import get_blackboard_or_none
+from camera_calibration.camera import DistortionCamera 
 
-##test comment blabla
-#test 2
+camera_changed = True
 
-cap = cv2.VideoCapture("testfiles/vid1.mp4")
+if camera_changed: 
+    CurrentCamera: DistortionCamera = DistortionCamera.create_camera_matrix_from_directory("", ".jpg", "CurrentCamera.object")
+else:
+    CurrentCamera: DistortionCamera = DistortionCamera.create_matrix_from_file("CurrentCamera.object")
+
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4096.0)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160.0)
 
 while(True):
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    
-    blackboard = get_blackboard(frame)
-
-    # Display the resulting frame
-    cv2.imshow('frame',blackboard)
+    ret, img = cap.read()
+    if ret:
+        img = CurrentCamera.undistort_image(img)
+        cv2.imshow('frame',img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
