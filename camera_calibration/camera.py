@@ -64,7 +64,8 @@ class DistortionCamera:
     @staticmethod
     def create_matrix_from_file(filename: str):
         camera_file = open(filename, "rb")
-        return pickle.load(camera_file)
+        instance = pickle.load(camera_file)
+        if type(instance) == DistortionCamera: return instance
 
     def undistort_image(self, image):
         dst = cv2.undistort(image, self.matrix, self.dist, None, self.cameramatrix)
