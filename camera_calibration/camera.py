@@ -50,8 +50,6 @@ class DistortionCamera:
 
         return CurrentCamera
 
-
-
     @staticmethod
     def create_camera_matrix_from_directory(path: str, filetype: str, filename: str):
         filenames = glob(path+"*"+filetype, recursive=True)
