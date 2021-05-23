@@ -1,6 +1,7 @@
 from glob import glob
 import cv2 
 import numpy as np 
+import pickle
 from dataclasses import dataclass
 
 @dataclass(frozen = True)
@@ -13,8 +14,12 @@ class DistortionCamera:
     def __post_init__(self):
         if np.shape(self.matrix) != (3,3): raise ValueError("wrong matrix shape")
 
+    def __save_obj(self, filename):
+        CurrentCameraFile = open(filename, "wb")
+        pickle.dump(self, CurrentCameraFile)
+
     @staticmethod
-    def create_camera_matrix_from_images(images: tuple):
+    def create_camera_matrix_from_images(images: tuple, filename: str):
         CHECKERBOARD = (6, 9)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         threedpoints = []
@@ -39,22 +44,27 @@ class DistortionCamera:
             raise ValueError("Error getting optimal camera matrix")
 
         cameramtx, roi = cv2.getOptimalNewCameraMatrix(matrix, distortion, (1920*2, 1080*2), None, None)
-        print(f"matrix {type(matrix)}")
-        print(f"dist: {type(distortion)}")
-        return DistortionCamera(cameramtx, roi, matrix, distortion)
+
+        CurrentCamera = DistortionCamera(cameramtx, roi, matrix, distortion)
+        CurrentCamera.__save_obj(filename)
+
+        return CurrentCamera
+
+
 
     @staticmethod
-    def create_camera_matrix_from_directory(path: str, filetype: str):
+    def create_camera_matrix_from_directory(path: str, filetype: str, filename: str):
         filenames = glob(path+"*"+filetype, recursive=True)
         images = [cv2.imread(filename) for filename in filenames]
         if len(images) > 0:
-            return DistortionCamera.create_camera_matrix_from_images(images)
+            return DistortionCamera.create_camera_matrix_from_images(images, filename)
         else:
             raise NameError("Image Path does not exist")
 
     @staticmethod
-    def create_matrix_from_file():
-        pass
+    def create_matrix_from_file(filename: str):
+        camera_file = open(filename, "rb")
+        return pickle.load(camera_file)
 
     def undistort_image(self, image):
         dst = cv2.undistort(image, self.matrix, self.dist, None, self.cameramatrix)

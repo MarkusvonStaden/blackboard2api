@@ -2,10 +2,12 @@ import cv2
 from image_capturing.image_capturing import get_blackboard_or_none
 from camera_calibration.camera import DistortionCamera 
 
-camera_changed = True #for developping purpose; will later be set by GUI
+camera_changed = True
 
-if camera_changed == True: 
-    CurrentCamera = DistortionCamera.create_camera_matrix_from_directory("", ".jpg")
+if camera_changed: 
+    CurrentCamera: DistortionCamera = DistortionCamera.create_camera_matrix_from_directory("", ".jpg", "CurrentCamera.object")
+else:
+    CurrentCamera: DistortionCamera = DistortionCamera.create_matrix_from_file("CurrentCamera.object")
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4096.0)
