@@ -39,7 +39,7 @@ class Blackboard:
 
     @classmethod
     def _blackboard_from_contour(cls, img, contour):
-        input_points = cls._sort_points(contour) * 2
+        input_points = cls._sort_points(contour)
         output_points = np.float32([[0, 0],[0, 500],[1500, 0],[1500, 500]])
         mat = cv2.getPerspectiveTransform(input_points, output_points)
         return cv2.warpPerspective(img, mat, (1500, 500))
@@ -53,7 +53,7 @@ class Blackboard:
             epsilon = 0.025*cv2.arcLength(c, True)
             approx = cv2.approxPolyDP(c, epsilon, True)
             if len(approx) == 4:
-                return approx
+                return approx*2
 
     @staticmethod
     def _create_mask(img, h_min = 50, s_min = 40, v_min = 0, h_max = 100, s_max = 200, v_max = 255, kernel_size = (15,15)):
@@ -75,3 +75,6 @@ class Blackboard:
         if contour is not None:
             board = cls._blackboard_from_contour(img, contour)
         return cls(img, contour, board)
+
+    def draw_boundingbox(self):
+        return cv2.drawContours(self.image, [self.contour], -1, (255,0,0), 2)
