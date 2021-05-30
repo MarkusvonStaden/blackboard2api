@@ -20,7 +20,7 @@ class Blackboard:
         bottom_left = sorted_left[0] if sorted_left[0][1] < sorted_left[1][1] else sorted_left[1]
         top_right = sorted_right[0] if sorted_left[0][1] > sorted_right[1][1] else sorted_right[1]
         bottom_right = sorted_right[0] if sorted_left[0][1] < sorted_right[1][1] else sorted_right[1]
-        return np.float32([top_left, top_right, bottom_left, bottom_right])
+        return np.float32([bottom_left, top_left, bottom_right, top_right])
 
     @staticmethod
     def _resize(img, scale):
@@ -40,9 +40,9 @@ class Blackboard:
     @classmethod
     def _blackboard_from_contour(cls, img, contour):
         input_points = cls._sort_points(contour) * 2
-        output_points = np.float32([[0, 0],[0, 1500],[500, 0],[500, 1500]])
+        output_points = np.float32([[0, 0],[0, 500],[1500, 0],[1500, 500]])
         mat = cv2.getPerspectiveTransform(input_points, output_points)
-        perspective = cv2.warpPerspective(img, mat, (500, 1500))
+        return cv2.warpPerspective(img, mat, (1500, 500))
         return cv2.rotate(perspective, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
     @staticmethod
