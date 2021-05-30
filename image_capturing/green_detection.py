@@ -43,7 +43,6 @@ class Blackboard:
         output_points = np.float32([[0, 0],[0, 500],[1500, 0],[1500, 500]])
         mat = cv2.getPerspectiveTransform(input_points, output_points)
         return cv2.warpPerspective(img, mat, (1500, 500))
-        return cv2.rotate(perspective, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
     @staticmethod
     def get_biggest_contour(mask):
