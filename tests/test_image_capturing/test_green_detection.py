@@ -4,7 +4,7 @@ import cv2
 
 image = np.ones((1080*2, 1920*2, 3), np.float32) * 255.0
 empty_image = image
-image[250:750, 250:1750] = np.array((60, 60, 60), np.float32)*255
+image[250:750, 250:1750] = np.array((60, 60, 60), np.float32)
 image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
 def test_blackboard_detection():
