@@ -23,8 +23,8 @@ while(True):
         img = CurrentCamera.undistort_image(img)
         img = Blackboard.from_image(img)
         if img.board is not None:
-            cv2.imshow('boundingbox',Blackboard._resize(img.draw_boundingbox(), 0.5))
             cv2.imshow('blackboard', img.board)
+        cv2.imshow('boundingbox',Blackboard._resize(img.draw_boundingbox(), 0.5))
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

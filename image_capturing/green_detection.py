@@ -77,4 +77,6 @@ class Blackboard:
         return cls(img, contour, board)
 
     def draw_boundingbox(self):
+        if self.contour is None:
+            return self.image
         return cv2.drawContours(self.image, [self.contour], -1, (255,0,0), 2)
