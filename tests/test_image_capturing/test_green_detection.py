@@ -20,7 +20,12 @@ def test_blackboard_detection_with_empty_image():
     assert blackboard.board is None 
 
 def test_sort():
-    points = [[[0,0]],[[0,1]],[[1,0]],[[1,1]]]
+    points = np.array(([[[0,0]],[[0,1]],[[1,0]],[[1,1]]]))
     expected_result = np.float32([[0,0], [0,1], [1,0], [1,1]])
     result = Blackboard._sort_points(points)
+    assert np.array_equal(result, expected_result)
+
+def test_resize():
+    expected_result = (1080, 1920, 3)
+    result = Blackboard._resize(image, 0.5).shape
     assert result == expected_result
