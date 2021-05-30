@@ -1,8 +1,6 @@
 import cv2
 from camera_calibration.camera import DistortionCamera 
-from image_capturing.edge_detection import get_blackboard_or_none
-from image_capturing.green_detection import Frame
-from image_capturing.hough_detection import _hough_detection
+from image_capturing.green_detection import Blackboard
 
 camera_changed = False
 use_camera = False
@@ -23,10 +21,9 @@ while(True):
     ret, img = cap.read()
     if ret:
         img = CurrentCamera.undistort_image(img)
-        img = Frame(img)
-        
-        img = cv2.resize(img.image, (1280, 720))
-        cv2.imshow('frame',img)
+        img = Blackboard.from_image(img)
+        if img.board is not None:
+            cv2.imshow('frame',img.board)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
