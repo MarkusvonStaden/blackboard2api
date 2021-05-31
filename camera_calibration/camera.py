@@ -18,8 +18,8 @@ class DistortionCamera:
         CurrentCameraFile = open(filename, "wb")
         pickle.dump(self, CurrentCameraFile)
 
-    @staticmethod
-    def create_camera_matrix_from_images(images: tuple, filename: str):
+    @classmethod
+    def create_camera_matrix_from_images(cls, images: tuple, filename: str):
         CHECKERBOARD = (6, 9)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         threedpoints = []
@@ -45,17 +45,17 @@ class DistortionCamera:
 
         cameramtx, roi = cv2.getOptimalNewCameraMatrix(matrix, distortion, (1920*2, 1080*2), None, None)
 
-        CurrentCamera = DistortionCamera(cameramtx, roi, matrix, distortion)
+        CurrentCamera = cls(cameramtx, roi, matrix, distortion)
         CurrentCamera.__save_obj(filename)
 
         return CurrentCamera
 
-    @staticmethod
-    def create_camera_matrix_from_directory(path: str, filetype: str, filename: str):
+    @classmethod
+    def create_camera_matrix_from_directory(cls, path: str, filetype: str, filename: str):
         filenames = glob(path+"*"+filetype, recursive=True)
         images = [cv2.imread(filename) for filename in filenames]
         if len(images) > 0:
-            return DistortionCamera.create_camera_matrix_from_images(images, filename)
+            return cls.create_camera_matrix_from_images(images, filename)
         else:
             raise NameError("Image Path does not exist")
 

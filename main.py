@@ -1,23 +1,30 @@
 import cv2
-from image_capturing.image_capturing import get_blackboard_or_none
 from camera_calibration.camera import DistortionCamera 
+from image_capturing.green_detection import Blackboard
 
-camera_changed = True
+camera_changed = False
+use_camera = False
 
 if camera_changed: 
     CurrentCamera: DistortionCamera = DistortionCamera.create_camera_matrix_from_directory("", ".jpg", "CurrentCamera.object")
 else:
     CurrentCamera: DistortionCamera = DistortionCamera.create_matrix_from_file("CurrentCamera.object")
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4096.0)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160.0)
+if use_camera:
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4096.0)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160.0)
+else:
+    cap = cv2.VideoCapture("testfiles/vid1.mp4")
 
 while(True):
     ret, img = cap.read()
     if ret:
         img = CurrentCamera.undistort_image(img)
-        cv2.imshow('frame',img)
+        img = Blackboard.from_image(img)
+        if img.board is not None:
+            cv2.imshow('blackboard', img.board)
+        cv2.imshow('boundingbox',Blackboard._resize(img.draw_boundingbox(), 0.5))
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
