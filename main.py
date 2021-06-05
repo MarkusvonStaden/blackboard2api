@@ -17,8 +17,6 @@ class Main:
         else:
             self.currentCamera = DistortionCamera.create_matrix_from_file("CurrentCamera.object")
 
-        self.main()
-
     def main(self):
         ret, img = self.cap.read()
         if ret:
