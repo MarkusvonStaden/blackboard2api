@@ -4,6 +4,8 @@ from image_capturing.green_detection import Blackboard
 
 class Main:
     def __init__(self, use_camera, recalibrate_camera):
+        self.buffer = []
+
         if use_camera:
             self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 4096.0)
@@ -22,8 +24,30 @@ class Main:
         if ret:
             img = self.currentCamera.undistort_image(img)
             img = Blackboard.from_image(img)
-            print(img)
+            if img.contour is not None:
+                img = self.validate_corners(img)
             return img
+
+    def validate_corners(self, img):
+        corners = Blackboard.sort_points(img.contour)
+        in_range = True
+        for buf in self.buffer:
+            buf_corners = Blackboard.sort_points(buf.contour)
+            for i in range(3):
+                for j in range(1):
+                    if not (buf_corners[i,j] - 10 <= corners[i,j] <= buf_corners[i,j] + 10):
+                        in_range = False
+                        break
+                if not in_range: break
+            if not in_range: break
+
+        self.buffer.append(img)
+        if len(self.buffer) > 10: self.buffer.pop(0)
+
+        if in_range: return img
+        else: return Blackboard(img.image)
+                
+
 
     def __del__(self):
         self.cap.release()
@@ -32,8 +56,8 @@ if __name__ == '__main__':
     detection = Main(use_camera=False, recalibrate_camera=False)
     while True:
         if (img := detection.main()) is not None:
-            if img.board is not None:
-                cv2.imshow("board", img.board)
+            if img.contour is not None:
+                cv2.imshow("board", img.get_blackboard())
             cv2.imshow("frame", img.draw_boundingbox())
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break

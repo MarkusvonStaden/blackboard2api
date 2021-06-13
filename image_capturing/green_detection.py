@@ -4,14 +4,14 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
-@dataclass(frozen = True)
+@dataclass
 class Blackboard:
     image: np.ndarray
     contour: Optional[np.ndarray] = None
     board: Optional[np.ndarray] = None
 
     @staticmethod
-    def _sort_points(c):
+    def sort_points(c):
         points = [c[0,0], c[1,0], c[2,0], c[3,0]]
         sorted_x = sorted(points, key=itemgetter(0))
         sorted_left = sorted_x[:2]
@@ -39,7 +39,7 @@ class Blackboard:
 
     @classmethod
     def _blackboard_from_contour(cls, img, contour):
-        input_points = cls._sort_points(contour)
+        input_points = cls.sort_points(contour)
         output_points = np.float32([[0, 0],[0, 500],[1500, 0],[1500, 500]])
         mat = cv2.getPerspectiveTransform(input_points, output_points)
         return cv2.warpPerspective(img, mat, (1500, 500))
@@ -71,12 +71,15 @@ class Blackboard:
         hsv_blurred = cls._blur(hsv, 5)
         mask = cls._create_mask(hsv_blurred)
         contour = cls.get_biggest_contour(mask)
-        board = None
-        if contour is not None:
-            board = cls._blackboard_from_contour(img, contour)
-        return cls(img, contour, board)
+        return cls(img, contour)
+
 
     def draw_boundingbox(self):
         if self.contour is None:
             return self.image
         return cv2.drawContours(self.image, [self.contour], -1, (255,0,0), 2)
+
+    def get_blackboard(self):
+        if self.contour is not None:
+            self.board = self._blackboard_from_contour(self.image, self.contour)
+            return self.board
