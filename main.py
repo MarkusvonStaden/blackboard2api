@@ -1,6 +1,8 @@
 import cv2
 from camera_calibration.camera import DistortionCamera 
 from image_capturing.green_detection import Blackboard
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Main:
     def __init__(self, use_camera, recalibrate_camera):
@@ -48,17 +50,29 @@ class Main:
         else: return Blackboard(img.image)
                 
 
-
     def __del__(self):
         self.cap.release()
 
 if __name__ == '__main__':
+    values = []
+    time = []
+    cur_frame = 0
     detection = Main(use_camera=False, recalibrate_camera=False)
     while True:
+        cur_frame += 1
         if (img := detection.main()) is not None:
             if img.contour is not None:
-                cv2.imshow("board", img.get_blackboard())
+                board = img.get_blackboard()
+                cv2.imshow("board", board)
+                thres = cv2.Canny(board, 100, 200)
+                cv2.imshow("thres", thres)
+                values.append(np.sum(thres))
+                time.append(cur_frame)
             cv2.imshow("frame", img.draw_boundingbox())
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
     del detection
+    cv2.destroyAllWindows()
+    
+    plt.plot(time, values)
+    plt.show()
