@@ -22,7 +22,7 @@ def test_blackboard_detection_with_empty_image():
 def test_sort():
     points = np.array(([[[0,0]],[[0,1]],[[1,0]],[[1,1]]]))
     expected_result = np.float32([[0,0], [0,1], [1,0], [1,1]])
-    result = Blackboard._sort_points(points)
+    result = Blackboard.sort_points(points)
     assert np.array_equal(result, expected_result)
 
 def test_resize():
