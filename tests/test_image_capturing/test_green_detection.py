@@ -11,13 +11,11 @@ def test_blackboard_detection():
     blackboard = Blackboard.from_image(image)
     assert type(blackboard) is Blackboard
     assert blackboard.contour is not None
-    assert blackboard.board is not None 
 
 def test_blackboard_detection_with_empty_image():
     blackboard = Blackboard.from_image(empty_image)
     assert type(blackboard) is Blackboard
     assert blackboard.contour is None
-    assert blackboard.board is None 
 
 def test_sort():
     points = np.array(([[[0,0]],[[0,1]],[[1,0]],[[1,1]]]))
