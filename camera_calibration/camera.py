@@ -4,8 +4,9 @@ import numpy as np
 import pickle
 from dataclasses import dataclass
 
-@dataclass(frozen = True)
+@dataclass(frozen = True)       # once created, object cannot be modified 
 class DistortionCamera:
+    # attributes: 
     cameramatrix: np.ndarray
     roi: tuple
     matrix: np.ndarray
@@ -14,12 +15,16 @@ class DistortionCamera:
     def __post_init__(self):
         if np.shape(self.matrix) != (3,3): raise ValueError("wrong matrix shape")
 
-    def __save_obj(self, filename):
-        CurrentCameraFile = open(filename, "wb")
+    def __save_obj(self, pathname):
+        """" Saves the object with the information about camera-specific distortion"""
+        CurrentCameraFile = open(pathname, "wb")
         pickle.dump(self, CurrentCameraFile)
 
     @classmethod
-    def create_camera_matrix_from_images(cls, images: tuple, filename: str):
+    def create_camera_matrix_from_images(cls, images: tuple, pathname: str):
+        """ Calculates the camera matrix from reference images.
+        Images must be photos of a chessboard with 6 x 9 fields photographed from different angles. 
+        """
         CHECKERBOARD = (6, 9)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         threedpoints = []
@@ -29,10 +34,13 @@ class DistortionCamera:
         objectp3d[0, :, :2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 
         for image in images:
+            # change color space 
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
+
+            ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK 
+            + cv2.CALIB_CB_NORMALIZE_IMAGE)
             if not ret:
-                raise ValueError("Error getting Corners")
+                raise ValueError("Error getting corners")
 
             threedpoints.append(objectp3d)
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
@@ -46,7 +54,7 @@ class DistortionCamera:
         cameramtx, roi = cv2.getOptimalNewCameraMatrix(matrix, distortion, (1920*2, 1080*2), None, None)
 
         CurrentCamera = cls(cameramtx, roi, matrix, distortion)
-        CurrentCamera.__save_obj(filename)
+        CurrentCamera.__save_obj(pathname)
 
         return CurrentCamera
 
@@ -60,8 +68,8 @@ class DistortionCamera:
             raise NameError("Image Path does not exist")
 
     @staticmethod
-    def create_matrix_from_file(filename: str):
-        camera_file = open(filename, "rb")
+    def create_matrix_from_file(pathname: str):
+        camera_file = open(pathname, "rb")
         instance = pickle.load(camera_file)
         if type(instance) == DistortionCamera: return instance
 
