@@ -71,6 +71,7 @@ class Main:
 
             else: break
         if len(self.boards) > 0: self.final_boards.append(self.boards[-1])
+        return self.final_boards
 
     def save_images(self, directory = ""):
         for index in range(len(self.final_boards)):
