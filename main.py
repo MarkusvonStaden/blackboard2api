@@ -1,7 +1,6 @@
 import cv2
 from camera_calibration.camera import DistortionCamera 
 from image_capturing.green_detection import Blackboard
-import matplotlib.pyplot as plt
 import numpy as np
 
 class Main:
