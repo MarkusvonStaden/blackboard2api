@@ -4,15 +4,13 @@ import numpy as np
 import pickle
 from dataclasses import dataclass
 
-@dataclass(frozen = True)       # once created, object cannot be modified 
+@dataclass(frozen = True)       
 class DistortionCamera:
-    # attributes: 
     cameramatrix: np.ndarray
     roi: tuple
     matrix: np.ndarray
     dist: np.ndarray
 
-    # methods: 
     def __post_init__(self):
         """ Acts as init-method for a dataclass. 
         """
@@ -38,7 +36,7 @@ class DistortionCamera:
         objectp3d[0, :, :2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 
         for image in images:
-            # change color space 
+
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
             ret, corners = cv2.findChessboardCorners(gray, CHECKERBOARD, cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK 
@@ -55,7 +53,6 @@ class DistortionCamera:
         if not ret:
             raise ValueError("Error getting optimal camera matrix")
 
-        # get camera matrix and roi (= region of interest)
         cameramtx, roi = cv2.getOptimalNewCameraMatrix(matrix, distortion, (1920*2, 1080*2), None, None)
 
         CurrentCamera = cls(cameramtx, roi, matrix, distortion)
