@@ -1,13 +1,19 @@
 import cv2
 import numpy as np
 
-def _resize(img, scale):
+def _resize(img, scale : float):
+    """
+    Increases or decreases an image by a given scaling factor. The proportions remain the same. 
+    """
     h, w = img.shape[:2]
     h = int(scale * h)
     w = int(scale * w)
     return cv2.resize(img, (w, h))
 
 def _find_biggest_contour(img, raw):
+    """
+    Finds the biggest contour (presumably the blackboard) in an image. 
+    """
     max_area = 0
     biggest_contour = np.array([])
     raw = raw.copy()
