@@ -2,6 +2,7 @@ import cv2
 from camera_calibration.camera import DistortionCamera 
 from image_capturing.green_detection import Blackboard
 import numpy as np
+import sys
 
 class Main:
     def __init__(self, recalibrate_camera = False, path = None):
@@ -89,7 +90,16 @@ class Main:
         
 
 if __name__ == '__main__':
-    detection = Main(path="testfiles/test.mp4")
-    detection.loop()
-    detection.save_images()
-    del detection
+    
+    if len(sys.argv) == 1:
+        detection = Main(path="testfiles/test.mp4")
+        detection.loop()
+        detection.save_images()
+        del detection
+
+    elif len(sys.argv) > 1:
+        if len(sys.argv) == 2: sys.argv[2] = ""
+        detection = Main(path=sys.argv[1])
+        detection.loop()
+        detection.save_images(sys.argv[2])
+        del detection
