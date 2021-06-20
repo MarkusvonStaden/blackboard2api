@@ -12,11 +12,15 @@ class DistortionCamera:
     matrix: np.ndarray
     dist: np.ndarray
 
+    # methods: 
     def __post_init__(self):
+        """ Acts as init-method for a dataclass. 
+        """
         if np.shape(self.matrix) != (3,3): raise ValueError("wrong matrix shape")
 
     def __save_obj(self, pathname):
-        """" Saves the object with the information about camera-specific distortion"""
+        """ Saves the object with the information about camera-specific distortion
+        """
         CurrentCameraFile = open(pathname, "wb")
         pickle.dump(self, CurrentCameraFile)
 
@@ -51,6 +55,7 @@ class DistortionCamera:
         if not ret:
             raise ValueError("Error getting optimal camera matrix")
 
+        # get camera matrix and roi (= region of interest)
         cameramtx, roi = cv2.getOptimalNewCameraMatrix(matrix, distortion, (1920*2, 1080*2), None, None)
 
         CurrentCamera = cls(cameramtx, roi, matrix, distortion)
@@ -60,20 +65,26 @@ class DistortionCamera:
 
     @classmethod
     def create_camera_matrix_from_directory(cls, path: str, filetype: str, filename: str):
+        """ Calls create_camera_matrix_from_images with images from the directory. 
+        """
         filenames = glob(path+"*"+filetype, recursive=True)
         images = [cv2.imread(filename) for filename in filenames]
         if len(images) > 0:
             return cls.create_camera_matrix_from_images(images, filename)
         else:
-            raise NameError("Image Path does not exist")
+            raise NameError("Image path does not exist")
 
     @staticmethod
     def create_matrix_from_file(pathname: str):
+        """ Creates a camera matrix as an instance of DistortionCamera from a binary file. 
+        """
         camera_file = open(pathname, "rb")
         instance = pickle.load(camera_file)
         if type(instance) == DistortionCamera: return instance
 
     def undistort_image(self, image):
+        """ Eliminates camera dependent distortion in an image. 
+        """
         dst = cv2.undistort(image, self.matrix, self.dist, None, self.cameramatrix)
         x, y, w, h = self.roi
         return dst[y:y+h, x:x+w]
