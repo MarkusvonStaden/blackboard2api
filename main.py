@@ -5,6 +5,9 @@ import numpy as np
 
 class Main:
     def __init__(self, recalibrate_camera = False, path = None):
+        """
+        main initialization
+        """
         self.buffer = []
         self.values = []
         self.boards = []
@@ -24,6 +27,9 @@ class Main:
             self.currentCamera = DistortionCamera.create_matrix_from_file("CurrentCamera.object")
 
     def main(self):
+        """
+        undistorts images from the video, finds the blackboard and validates the corners to reduce tremble 
+        """
         ret, img = self.cap.read()
         if ret: 
             img = self.currentCamera.undistort_image(img)
@@ -34,6 +40,9 @@ class Main:
 
 
     def validate_corners(self, img):
+        """
+        validates corners to reduce tremble
+        """
         corners = Blackboard.sort_points(img.contour)
         in_range = len(self.buffer)
         for buf in self.buffer:
@@ -53,10 +62,16 @@ class Main:
                 
 
     def __del__(self):
+        """
+        releases the captured video 
+        """
         self.cap.release()
 
 
     def loop(self):
+        """
+        searches blackboards and collects them 
+        """
         while True:
             if (img := self.main()) is not None:
                 if img.contour is not None:
@@ -74,11 +89,17 @@ class Main:
         return self.final_boards
 
     def save_images(self, directory = ""):
+        """
+        saves the blackboards consecutively numbered 
+        """
         for index in range(len(self.final_boards)):
             cv2.imwrite(directory + str(index)+".png", self.final_boards[index])
 
 
     def evaluate_images(self, threshold):
+        """
+        evaluates the images with the threshold 
+        """
         if len(self.values) > 20:
             values = [value if value > threshold else 0 for value in self.values]
 

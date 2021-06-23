@@ -12,6 +12,9 @@ class Blackboard:
 
     @staticmethod
     def sort_points(c):
+        """
+        calculates which point corresponds to which corner of the rectancle, perspective is not yet corrected
+        """
         points = c.reshape(4,2)
         rect = np.zeros((4,2), dtype="float32")
 
@@ -27,6 +30,9 @@ class Blackboard:
 
     @staticmethod
     def _resize(img, scale):
+        """
+        resizes the image by a given scaling factor, aspect ratio remains the same
+        """
         h, w = img.shape[:2]
         h = int(scale * h)
         w = int(scale * w)
@@ -34,6 +40,9 @@ class Blackboard:
 
     @staticmethod
     def _blur(img, blur):
+        """
+        blurs each color channel of the HSV colorspace with a median filter
+        """
         h, s, v = cv2.split(img)
         h = cv2.medianBlur(h, blur)
         s = cv2.medianBlur(s, blur)
@@ -42,6 +51,9 @@ class Blackboard:
 
     @classmethod
     def _blackboard_from_contour(cls, img, contour):
+        """
+        finds the blackboard with the contour points and corrects the perspective 
+        """
         input_points = cls.sort_points(contour)
         output_points = np.float32([[0, 0],[1500, 0],[1500, 500],[0, 500]])
         mat = cv2.getPerspectiveTransform(input_points, output_points)
@@ -49,6 +61,9 @@ class Blackboard:
 
     @staticmethod
     def get_biggest_contour(mask):
+        """
+        finds the contours in the image (mask) and returns the biggest quad 
+        """
         contours, hirachy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         if len(contours) != 0:
@@ -60,6 +75,9 @@ class Blackboard:
 
     @staticmethod
     def _create_mask(img, h_min = 50, s_min = 40, v_min = 0, h_max = 100, s_max = 200, v_max = 255, kernel_size = (10,10)):
+        """
+        creation of the mask based of a range of valid color values 
+        """
         green_MIN = np.array([h_min, s_min, v_min], np.uint8)
         green_MAX = np.array([h_max, s_max, v_max], np.uint8)
         mask = cv2.inRange(img, green_MIN, green_MAX)
@@ -70,6 +88,9 @@ class Blackboard:
 
     @classmethod
     def from_image(cls, img):
+        """
+        compresses the image, switches the color space to HSV, blurs the image and finds the biggest contour
+        """
         low_res = cls._resize(img, 0.5)
         hsv = cv2.cvtColor(low_res, cv2.COLOR_BGR2HSV)
         hsv_blurred = cls._blur(hsv, 5)
@@ -79,11 +100,17 @@ class Blackboard:
 
 
     def draw_boundingbox(self):
+        """
+        plots the contour in the image 
+        """
         if self.contour is None:
             return self.image
         return cv2.drawContours(self.image, [self.contour], -1, (255,0,0), 2)
 
     def get_blackboard(self):
+        """
+        returns the board if found 
+        """
         if self.contour is not None:
             self.board = self._blackboard_from_contour(self.image, self.contour)
             return self.board
