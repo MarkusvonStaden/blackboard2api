@@ -8,7 +8,7 @@ Python 3.8 or newer is required.
 ### Step 2: Install requirements
 execute 
 ```
-pip3 install requirements.txt
+pip3 install -r requirements.txt
 ```
 in order to install all required modules.
 
